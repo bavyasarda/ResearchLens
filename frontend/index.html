@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResearchLens - AI Research Paper Analyzer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 40 40" fill="none">
+                            <circle cx="20" cy="20" r="18" stroke="url(#grad1)" stroke-width="2"/>
+                            <circle cx="20" cy="20" r="12" stroke="url(#grad1)" stroke-width="2"/>
+                            <circle cx="20" cy="20" r="6" stroke="url(#grad1)" stroke-width="2"/>
+                            <defs>
+                                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#00d4ff"/>
+                                    <stop offset="100%" style="stop-color:#8b5cf6"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <span class="logo-text">ResearchLens</span>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <button class="nav-item active" data-page="home">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                    <span>Home</span>
+                </button>
+                <button class="nav-item" data-page="papers">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                    </svg>
+                    <span>Papers</span>
+                    <span class="badge" id="papersBadge">0</span>
+                </button>
+                <button class="nav-item" data-page="summaries">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <path d="M14 2v6h6"/>
+                        <path d="M16 13H8"/>
+                        <path d="M16 17H8"/>
+                        <path d="M10 9H8"/>
+                    </svg>
+                    <span>Summaries</span>
+                </button>
+                <button class="nav-item" data-page="compare">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <path d="M3 9h18"/>
+                        <path d="M9 3v18"/>
+                    </svg>
+                    <span>Compare</span>
+                </button>
+                <button class="nav-item" data-page="chat">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    <span>Chat</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="nav-item" id="aboutBtn">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <span>About</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Home Page -->
+            <div class="page" id="homePage">
+                <div class="page-header">
+                    <h1>Research Assistant</h1>
+                    <p>Search and analyze academic papers with AI-powered insights</p>
+                </div>
+
+                <div class="search-section">
+                    <div class="search-box">
+                        <div class="search-input-wrapper">
+                            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                            <input type="text" id="queryInput" placeholder="Enter your research topic or problem statement..." class="search-input">
+                            <button class="search-btn" id="searchBtn">
+                                <span>Analyze</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                    <polyline points="12 5 19 12 12 19"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="search-options">
+                        <div class="option-group">
+                            <label>Papers to retrieve</label>
+                            <div class="slider-wrapper">
+                                <input type="range" id="numPapers" min="1" max="30" value="10" class="slider">
+                                <span class="slider-value" id="numPapersValue">10</span>
+                            </div>
+                        </div>
+
+                        <div class="option-group">
+                            <label>Preference</label>
+                            <div class="radio-group">
+                                <label class="radio-item">
+                                    <input type="radio" name="preference" value="recent">
+                                    <span class="radio-mark"></span>
+                                    <span>Recent</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="preference" value="most_cited" checked>
+                                    <span class="radio-mark"></span>
+                                    <span>Most Cited</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="preference" value="balanced">
+                                    <span class="radio-mark"></span>
+                                    <span>Balanced</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="option-group">
+                            <label>Year Range</label>
+                            <div class="year-inputs">
+                                <input type="number" id="yearFrom" placeholder="From" class="year-input" min="1900" max="2026">
+                                <span>to</span>
+                                <input type="number" id="yearTo" placeholder="To" class="year-input" min="1900" max="2026" value="2026">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div class="loading-container" id="loadingContainer" style="display: none;">
+                    <div class="loading-header">
+                        <div class="loading-spinner"></div>
+                        <span id="loadingStatus">Analyzing papers...</span>
+                    </div>
+                    <div class="progress-steps">
+                        <div class="progress-step" id="step1">
+                            <div class="step-indicator">1</div>
+                            <div class="step-info">
+                                <span class="step-title">Expanding Query</span>
+                                <span class="step-desc">Optimizing search terms</span>
+                            </div>
+                        </div>
+                        <div class="progress-step" id="step2">
+                            <div class="step-indicator">2</div>
+                            <div class="step-info">
+                                <span class="step-title">Fetching Papers</span>
+                                <span class="step-desc">Retrieving from academic APIs</span>
+                            </div>
+                        </div>
+                        <div class="progress-step" id="step3">
+                            <div class="step-indicator">3</div>
+                            <div class="step-info">
+                                <span class="step-title">Analyzing Content</span>
+                                <span class="step-desc">Hybrid RAG retrieval</span>
+                            </div>
+                        </div>
+                        <div class="progress-step" id="step4">
+                            <div class="step-indicator">4</div>
+                            <div class="step-info">
+                                <span class="step-title">Generating Summaries</span>
+                                <span class="step-desc">AI-powered analysis</span>
+                            </div>
+                        </div>
+                        <div class="progress-step" id="step5">
+                            <div class="step-indicator">5</div>
+                            <div class="step-info">
+                                <span class="step-title">Building Comparison</span>
+                                <span class="step-desc">Creating comparison table</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Preview -->
+                <div class="results-preview" id="resultsPreview" style="display: none;">
+                    <div class="preview-stats">
+                        <div class="stat-card">
+                            <span class="stat-number" id="statPapers">0</span>
+                            <span class="stat-label">Papers Found</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number" id="statSummaries">0</span>
+                            <span class="stat-label">Summaries</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number" id="statAvgRelevance">0%</span>
+                            <span class="stat-label">Avg Relevance</span>
+                        </div>
+                    </div>
+                    <div class="preview-actions">
+                        <button class="action-btn primary" onclick="navigateTo('papers')">
+                            <span>View Papers</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                <polyline points="12 5 19 12 12 19"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Papers Page -->
+            <div class="page" id="papersPage" style="display: none;">
+                <div class="page-header">
+                    <div class="header-left">
+                        <button class="back-btn" onclick="navigateTo('home')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="19" y1="12" x2="5" y2="12"/>
+                                <polyline points="12 19 5 12 12 5"/>
+                            </svg>
+                        </button>
+                        <div>
+                            <h1>Papers</h1>
+                            <p id="papersPageDesc">Found 0 papers matching your query</p>
+                        </div>
+                    </div>
+                    <div class="header-actions">
+                        <div class="view-toggle">
+                            <button class="view-btn active" data-view="grid" onclick="setPapersView('grid')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="7"/>
+                                    <rect x="14" y="3" width="7" height="7"/>
+                                    <rect x="14" y="14" width="7" height="7"/>
+                                    <rect x="3" y="14" width="7" height="7"/>
+                                </svg>
+                            </button>
+                            <button class="view-btn" data-view="list" onclick="setPapersView('list')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="8" y1="6" x2="21" y2="6"/>
+                                    <line x1="8" y1="12" x2="21" y2="12"/>
+                                    <line x1="8" y1="18" x2="21" y2="18"/>
+                                    <line x1="3" y1="6" x2="3.01" y2="6"/>
+                                    <line x1="3" y1="12" x2="3.01" y2="12"/>
+                                    <line x1="3" y1="18" x2="3.01" y2="18"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="papers-container" id="papersContainer">
+                    <!-- Papers will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Paper Detail Page -->
+            <div class="page" id="paperDetailPage" style="display: none;">
+                <div class="paper-detail">
+                    <div class="detail-header">
+                        <button class="back-btn" onclick="navigateTo('papers')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="19" y1="12" x2="5" y2="12"/>
+                                <polyline points="12 19 5 12 12 5"/>
+                            </svg>
+                        </button>
+                        <span>Back to Papers</span>
+                    </div>
+
+                    <div class="detail-content">
+                        <div class="detail-main">
+                            <div class="paper-hero" id="paperHero">
+                                <!-- Paper details will be rendered here -->
+                            </div>
+
+                            <div class="detail-sections">
+                                <div class="detail-section">
+                                    <h3>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                            <path d="M14 2v6h6"/>
+                                        </svg>
+                                        Abstract
+                                    </h3>
+                                    <p id="paperAbstract">Loading...</p>
+                                </div>
+
+                                <div class="detail-section">
+                                    <h3>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                                            <polyline points="2 17 12 22 22 17"/>
+                                            <polyline points="2 12 12 17 22 12"/>
+                                        </svg>
+                                        AI-Generated Summary
+                                    </h3>
+                                    <p id="paperSummary">Loading...</p>
+                                </div>
+
+                                <div class="detail-section">
+                                    <h3>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10"/>
+                                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                        </svg>
+                                        Key Methodology
+                                    </h3>
+                                    <p id="paperMethodology">Loading...</p>
+                                </div>
+
+                                <div class="detail-section">
+                                    <h3>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <line x1="18" y1="20" x2="18" y2="10"/>
+                                            <line x1="12" y1="20" x2="12" y2="4"/>
+                                            <line x1="6" y1="20" x2="6" y2="14"/>
+                                        </svg>
+                                        Key Findings
+                                    </h3>
+                                    <p id="paperFindings">Loading...</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detail-sidebar">
+                            <div class="sidebar-card">
+                                <h4>Paper Info</h4>
+                                <div class="info-list">
+                                    <div class="info-item">
+                                        <span class="info-label">Authors</span>
+                                        <span class="info-value" id="detailAuthors">-</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Year</span>
+                                        <span class="info-value" id="detailYear">-</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Venue</span>
+                                        <span class="info-value" id="detailVenue">-</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Citations</span>
+                                        <span class="info-value" id="detailCitations">-</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Source</span>
+                                        <span class="info-value" id="detailSource">-</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="sidebar-card">
+                                <h4>Relevance</h4>
+                                <div class="relevance-display" id="detailRelevance">
+                                    <div class="relevance-score">0%</div>
+                                    <div class="relevance-bar">
+                                        <div class="relevance-fill"></div>
+                                    </div>
+                                    <p class="relevance-reason">-</p>
+                                </div>
+                            </div>
+
+                            <div class="sidebar-card actions">
+                                <a class="action-link" id="paperUrl" href="#" target="_blank">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                                        <polyline points="15 3 21 3 21 9"/>
+                                        <line x1="10" y1="14" x2="21" y2="3"/>
+                                    </svg>
+                                    View Paper
+                                </a>
+                                <a class="action-link" id="paperPdfUrl" href="#" target="_blank">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="7 10 12 15 17 10"/>
+                                        <line x1="12" y1="15" x2="12" y2="3"/>
+                                    </svg>
+                                    Download PDF
+                                </a>
+                            </div>
+
+                            <div class="sidebar-card">
+                                <h4>Ask About This Paper</h4>
+                                <textarea id="paperQuestion" placeholder="Ask a question about this paper..."></textarea>
+                                <button class="ask-btn" onclick="askAboutPaper()">Ask AI</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summaries Page -->
+            <div class="page" id="summariesPage" style="display: none;">
+                <div class="page-header">
+                    <div class="header-left">
+                        <button class="back-btn" onclick="navigateTo('home')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="19" y1="12" x2="5" y2="12"/>
+                                <polyline points="12 19 5 12 12 5"/>
+                            </svg>
+                        </button>
+                        <div>
+                            <h1>Paper Summaries</h1>
+                            <p>AI-powered analysis of each paper</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="summaries-container" id="summariesContainer">
+                    <!-- Summaries will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Compare Page -->
+            <div class="page" id="comparePage" style="display: none;">
+                <div class="page-header">
+                    <div class="header-left">
+                        <button class="back-btn" onclick="navigateTo('home')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="19" y1="12" x2="5" y2="12"/>
+                                <polyline points="12 19 5 12 12 5"/>
+                            </svg>
+                        </button>
+                        <div>
+                            <h1>Methodology Comparison</h1>
+                            <p>Side-by-side analysis of paper approaches</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-wrapper">
+                    <div class="comparison-table-container" id="comparisonTableContainer">
+                        <!-- Comparison table will be rendered here -->
+                    </div>
+
+                    <div class="alignment-analysis" id="alignmentAnalysis">
+                        <h3>Alignment Analysis</h3>
+                        <p id="analysisText">Loading analysis...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Page -->
+            <div class="page" id="chatPage" style="display: none;">
+                <div class="page-header">
+                    <div class="header-left">
+                        <button class="back-btn" onclick="navigateTo('home')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="19" y1="12" x2="5" y2="12"/>
+                                <polyline points="12 19 5 12 12 5"/>
+                            </svg>
+                        </button>
+                        <div>
+                            <h1>Research Chat</h1>
+                            <p>Ask questions about the papers or request comparisons</p>
+                        </div>
+                    </div>
+                    <button class="clear-chat-btn" onclick="clearChat()">Clear Chat</button>
+                </div>
+
+                <div class="chat-container">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="chat-empty">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            </svg>
+                            <p>Ask me anything about the papers!</p>
+                            <div class="suggestions">
+                                <button onclick="askSuggestion('Which paper is most relevant to my query?')">Which paper is most relevant?</button>
+                                <button onclick="askSuggestion('Compare the methodologies of all papers')">Compare methodologies</button>
+                                <button onclick="askSuggestion('What are the main limitations of these papers?')">Main limitations?</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input-container">
+                        <div class="chat-suggestions" id="chatSuggestions">
+                            <span class="suggestion-label">Quick questions:</span>
+                            <button onclick="askSuggestion('Summarize all papers briefly')">Summarize</button>
+                            <button onclick="askSuggestion('Which approach should I implement first?')">Implementation advice</button>
+                            <button onclick="askSuggestion('Are there any contradictions between papers?')">Find contradictions</button>
+                        </div>
+                        <div class="chat-input-wrapper">
+                            <input type="text" id="chatInput" placeholder="Ask about the papers..." disabled>
+                            <button class="send-btn" id="sendBtn" onclick="sendChatMessage()" disabled>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="22" y1="2" x2="11" y2="13"/>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- About Modal -->
+    <div class="modal" id="aboutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>About ResearchLens</h2>
+                <button class="close-btn" onclick="closeModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>ResearchLens is an AI-powered research paper analysis tool that helps you find, understand, and compare academic papers.</p>
+                <h3>Features</h3>
+                <ul>
+                    <li>Search papers from multiple academic databases</li>
+                    <li>AI-generated summaries and analysis</li>
+                    <li>Hybrid RAG retrieval for best results</li>
+                    <li>Comparative methodology analysis</li>
+                    <li>Interactive chat with paper context</li>
+                </ul>
+                <h3>How it works</h3>
+                <p>The system uses a hybrid retrieval approach combining dense embeddings and sparse BM25 retrieval with Reciprocal Rank Fusion, followed by cross-encoder reranking for optimal results.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
